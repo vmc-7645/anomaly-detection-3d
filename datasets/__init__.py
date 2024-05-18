@@ -1,5 +1,5 @@
-from datasets import load_mvtec_3d_dataset
+from .load_mvtec_3d_dataset import MVTec3D
 
 __all__ = [
-    "load_mvtec_3d_dataset"
+    "MVTec3D"
 ]

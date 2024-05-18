@@ -1,6 +1,7 @@
-from networks import student, teacher
+from .student_net import StudentNet
+from .teacher_net import TeacherNet
 
 __all__ = [
-    "student",
-    "teacher"
+    "StudentNet",
+    "TeacherNet"
 ]
