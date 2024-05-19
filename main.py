@@ -5,8 +5,8 @@ import torch_geometric.transforms as T
 from torch_geometric.data import DataLoader
 import matplotlib.pyplot as plt
 import open3d as o3d
-from datasets import MVTec3D
-from networks import StudentNet, TeacherNet
+from datasets.load_mvtec_3d_dataset import MVTec3D
+from networks import student_net, teacher_net
 
 class DecoderNet(nn.Module):
     def __init__(self, feature_dim):
@@ -73,13 +73,8 @@ def compute_anomaly_scores(student, teacher, dataloader, device):
     return anomaly_scores
 
 def visualize_anomalies(point_cloud, anomaly_scores):
-    # Normalize anomaly scores for visualization
     normalized_scores = (anomaly_scores - anomaly_scores.min()) / (anomaly_scores.max() - anomaly_scores.min())
-    
-    # Create color map based on normalized scores
     colors = plt.cm.jet(normalized_scores)[:, :3]
-    
-    # Visualize using Open3D
     pcd = o3d.geometry.PointCloud()
     pcd.points = o3d.utility.Vector3dVector(point_cloud)
     pcd.colors = o3d.utility.Vector3dVector(colors)
@@ -92,17 +87,18 @@ if __name__ == "__main__":
     feature_dim = 64
     batch_size = 16
     epochs = 10
+    fixed_size = 1024
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(device)
     
     # Initialize networks
-    initialized_teacher = TeacherNet(feature_dim).to(device)
-    initialized_student = StudentNet(feature_dim).to(device)
+    initialized_teacher = teacher_net.TeacherNet(feature_dim).to(device)
+    initialized_student = student_net.StudentNet(feature_dim).to(device)
     decoder = DecoderNet(feature_dim).to(device)
     
     # Load dataset and prepare DataLoader
-    train_dataset = MVTec3D(root='./datasets', split='train')
-    test_dataset = MVTec3D(root='./datasets', split='test')
+    train_dataset = MVTec3D(root='./datasets', split='train', fixed_size=fixed_size)
+    test_dataset = MVTec3D(root='./datasets', split='test', fixed_size=fixed_size)
     
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=4)
     test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=4)

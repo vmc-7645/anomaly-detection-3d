@@ -6,10 +6,14 @@ import numpy as np
 import json
 from PIL import Image
 
+from skimage import io
+# import matplotlib.pyplot as plt
+
 
 class MVTec3D(InMemoryDataset):
-    def __init__(self, root, split='train', transform=None, pre_transform=None):
+    def __init__(self, root, split='train', transform=None, pre_transform=None, fixed_size=1024):
         self.split = split
+        self.fixed_size = fixed_size
         super(MVTec3D, self).__init__(root, transform, pre_transform)
         self.data, self.slices = torch.load(self.processed_paths[0])
 
@@ -56,9 +60,17 @@ class MVTec3D(InMemoryDataset):
                             print(f"Processing TIFF file: {file_path}")
                             
                             # Load the data from .tiff file using PIL
-                            img = Image.open(file_path)
+                            # img = Image.open(file_path)
+                            img = io.imread(file_path)
                             points = np.array(img)  # Convert image to numpy array
                             pos = torch.tensor(points, dtype=torch.float)
+                            # if pos.size(0) > self.fixed_size:
+                            #     # Truncate the point cloud
+                            #     pos = pos[:self.fixed_size]
+                            # else:
+                            #     # Pad the point cloud with zeros
+                            #     padding = torch.zeros((self.fixed_size - pos.size(0), pos.size(1)))
+                            #     pos = torch.cat([pos, padding], dim=0)
                             
                             # Create Data object
                             data = Data(pos=pos)
@@ -68,6 +80,17 @@ class MVTec3D(InMemoryDataset):
                             img = Image.open(file_path)
                             points = np.array(img)  # Convert image to numpy array
                             pos = torch.tensor(points, dtype=torch.float)
+                            # if pos.size(0) > self.fixed_size:
+                            #     # Truncate the point cloud
+                            #     pos = pos[:self.fixed_size]
+                            # else:
+                            #     # Pad the point cloud with zeros
+                            #     padding = torch.zeros((self.fixed_size - pos.size(0), pos.size(1)))
+                            #     pos = torch.cat([pos, padding], dim=0)
+                            
+                            # Create Data object
+                            data = Data(pos=pos)
+                            data_list.append(data)
 
         if len(data_list) == 0:
             raise RuntimeError("No data found in the specified directories.")
