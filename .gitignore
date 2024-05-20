@@ -1,4 +1,6 @@
 *.xz
 *.zip
 *.crdownload
+*.pt
+*.pth
 datasets/mvtec_3d_anomaly_detection/

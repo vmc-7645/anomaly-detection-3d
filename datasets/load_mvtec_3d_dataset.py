@@ -5,6 +5,7 @@ from torch_geometric.data import InMemoryDataset, Data
 import numpy as np
 import json
 from PIL import Image
+from torchvision import transforms
 
 from skimage import io
 # import matplotlib.pyplot as plt
@@ -27,6 +28,7 @@ class MVTec3D(InMemoryDataset):
 
     def process(self):
         data_list = []
+        resizer = transforms.Compose([transforms.Resize((self.fixed_size,self.fixed_size))])
 
         # Directory for the specific split
         split_dir = os.path.join(self.root, 'mvtec_3d_anomaly_detection')
@@ -48,54 +50,45 @@ class MVTec3D(InMemoryDataset):
                 subfolder_dir = os.path.join(obj_dir, subfolder)
                 if not os.path.isdir(subfolder_dir):
                     continue
-
                 # Process each file in the subfolders (gt, rgb, xyz)
                 for folder_name in os.listdir(subfolder_dir):
                     folderstr = subfolder_dir+"\\"+folder_name
-                    print(f"Found folder: {folderstr}")  # Debug: Print out the file names
+                    # print(f"Found folder: {folderstr}")  # Debug: Print out the file names
+                    # if "foam" in folderstr:
+                    #     print("Early exit")
+                    #     break
                     for file_name in os.listdir(folderstr):
                         file_path = os.path.join(subfolder_dir, folder_name+"\\"+file_name)
-                        print(f"Found file: {file_name}")  # Debug: Print out the file names
                         if file_name.endswith('.tiff'):  # Update the file extension to '.tiff'
-                            print(f"Processing TIFF file: {file_path}")
-                            
-                            # Load the data from .tiff file using PIL
-                            # img = Image.open(file_path)
                             img = io.imread(file_path)
+                            img = Image.fromarray(img[0])
+                            img = resizer(img)
                             points = np.array(img)  # Convert image to numpy array
-                            pos = torch.tensor(points, dtype=torch.float)
-                            # if pos.size(0) > self.fixed_size:
-                            #     # Truncate the point cloud
-                            #     pos = pos[:self.fixed_size]
-                            # else:
-                            #     # Pad the point cloud with zeros
-                            #     padding = torch.zeros((self.fixed_size - pos.size(0), pos.size(1)))
-                            #     pos = torch.cat([pos, padding], dim=0)
-                            
-                            # Create Data object
-                            data = Data(pos=pos)
-                            data_list.append(data)
+                            pos = torch.tensor(points, dtype=torch.float).unsqueeze(-1).repeat(1, 1, 3)
                         elif file_name.endswith('.png'):
-                            print(f"Processing PNG file: {file_path}")
                             img = Image.open(file_path)
+                            img = resizer(img)
                             points = np.array(img)  # Convert image to numpy array
                             pos = torch.tensor(points, dtype=torch.float)
-                            # if pos.size(0) > self.fixed_size:
-                            #     # Truncate the point cloud
-                            #     pos = pos[:self.fixed_size]
-                            # else:
-                            #     # Pad the point cloud with zeros
-                            #     padding = torch.zeros((self.fixed_size - pos.size(0), pos.size(1)))
-                            #     pos = torch.cat([pos, padding], dim=0)
-                            
-                            # Create Data object
-                            data = Data(pos=pos)
-                            data_list.append(data)
+                        if (pos.size()==torch.Size([512,512])):
+                            pos = pos.unsqueeze(-1).repeat(1, 1, 3)
+                        # print(str(file_path)+" : "+str(pos.size()))
+                        data = Data(pos=pos)
+                        data_list.append(data)
+                        
 
         if len(data_list) == 0:
             raise RuntimeError("No data found in the specified directories.")
         
-        data, slices = self.collate(data_list)
-        torch.save((data, slices), self.processed_paths[0])
+        print("Saving data...")
+        try:
+            data, slices = self.collate(data_list)
+            torch.save((data, slices), self.processed_paths[0])
+            print(f"Data successfully saved to {self.processed_paths[0]}")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            # Detailed logging
+            import traceback
+            traceback.print_exc()
 
 
