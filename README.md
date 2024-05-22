@@ -1,6 +1,32 @@
-# anomaly-detection-3d
+# Anomaly Detection 3D
 
-Implementing  ["Anomaly Detection in 3D Point Clouds using Deep Geometric Descriptors"](https://arxiv.org/pdf/2202.11660) in Python
+An implementation of the ["Anomaly Detection in 3D Point Clouds using Deep Geometric Descriptors"](https://arxiv.org/pdf/2202.11660) paper in Python.
 
-# MVTec 3D-AD dataset
-https://www.mvtec.com/company/research/datasets/mvtec-3d-ad/downloads
+## Training
+After downloading the repo, complete the following:
+
+1. Download the [MVTec 3D-AD dataset](https://www.mvtec.com/company/research/datasets/mvtec-3d-ad/downloads) dataset and place its unzipped contents (it should be a folder titled "mvtec_3d_anomaly_detection") in the "datasets" folder.
+2. Run train script (`py -3 -m train`)
+
+If you are having issues or if it is running slowly, run the systemtest script.
+
+## Test
+Run the test/visualize script with `py -3 -m test` or `py -3 -m test filenamehere.png`
+
+### Example Results
+
+#### Carrot
+
+![a cut carrot](https://github.com/vmc-7645/anomaly-detection-3d/blob/main/testimg.png)
+
+![anomaly pointcloud of the cut carrot](https://github.com/vmc-7645/anomaly-detection-3d/blob/main/pointcloudscreenshot_testimg.png)
+
+#### Bagel
+
+![a damaged bagel](https://github.com/vmc-7645/anomaly-detection-3d/blob/main/testimg1.png)
+
+![anomaly pointcloud of the damaged bagel](https://github.com/vmc-7645/anomaly-detection-3d/blob/main/pointcloudscreenshot_testimg1.png)
+
+## Models
+
+Models uploaded to my drive, here: [anomaly-detection-3d-models](https://drive.google.com/drive/folders/1lfxbOMJv7Q0RX6g0ZDTO4yKyFxPAdj3O?usp=drive_link)
