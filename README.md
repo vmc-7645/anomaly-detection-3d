@@ -10,6 +10,8 @@ After downloading the repo, complete the following:
 
 If you are having issues or if it is running slowly, run the systemtest script.
 
+Also note that I trained these models on a NVIDIA GeForce RTX 3050 Ti Laptop GPU, so if you make some minor alterations to the train code (number of epochs or fixed_size for example), you can likely train better models than those found here. The models linked below only went through 8 epochs each, and ideally you want 11+ for this kind of model.
+
 ## Test
 Run the test/visualize script with `py -3 -m test` or `py -3 -m test filenamehere.png`
 
@@ -29,4 +31,4 @@ Run the test/visualize script with `py -3 -m test` or `py -3 -m test filenameher
 
 ## Models
 
-Models uploaded to my drive, here: [anomaly-detection-3d-models](https://drive.google.com/drive/folders/1lfxbOMJv7Q0RX6g0ZDTO4yKyFxPAdj3O?usp=drive_link)
+Models uploaded to my drive, here: [anomaly-detection-3d-models](https://drive.google.com/drive/folders/1lfxbOMJv7Q0RX6g0ZDTO4yKyFxPAdj3O?usp=drive_link).

@@ -48,7 +48,7 @@ def compute_anomaly_scores(student, teacher, dataloader, device):
 
             # Iterate over each index and assign its position as the value
             for i in range(262144):
-                reshaped_array[i] = [i% 512, i // 512, reshaped_point_cloud[i][2]*0.5]
+                reshaped_array[i] = [i% 512, i // 512, reshaped_point_cloud[i][0]-reshaped_point_cloud[i][1]]
             yield reshaped_array, reshaped_anomaly_scores
     return results
 
