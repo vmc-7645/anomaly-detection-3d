@@ -54,7 +54,7 @@ class MVTec3D(InMemoryDataset):
                 for folder_name in os.listdir(subfolder_dir):
                     folderstr = subfolder_dir+"\\"+folder_name
                     # print(f"Found folder: {folderstr}")  # Debug: Print out the file names
-                    # if "foam" in folderstr:
+                    # if "bagel" not in folderstr:
                     #     print("Early exit")
                     #     break
                     for file_name in os.listdir(folderstr):
