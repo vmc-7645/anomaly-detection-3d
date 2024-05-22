@@ -32,3 +32,5 @@ Run the test/visualize script with `py -3 -m test` or `py -3 -m test filenameher
 ## Models
 
 Models uploaded to my drive, here: [anomaly-detection-3d-models](https://drive.google.com/drive/folders/1lfxbOMJv7Q0RX6g0ZDTO4yKyFxPAdj3O?usp=drive_link).
+
+![train loss curve](https://github.com/vmc-7645/anomaly-detection-3d/blob/main/losscurve.png)
