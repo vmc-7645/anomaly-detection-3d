@@ -1,6 +1,6 @@
 # Anomaly Detection 3D
 
-An implementation of the ["Anomaly Detection in 3D Point Clouds using Deep Geometric Descriptors"](https://arxiv.org/pdf/2202.11660) paper in Python.
+An implementation of the ["Anomaly Detection in 3D Point Clouds using Deep Geometric Descriptors"](https://arxiv.org/pdf/2202.11660) paper in Python without pre-training with the ModelNet10 dataset and without generating the synthetic data.
 
 ## Training
 After downloading the repo, complete the following:
